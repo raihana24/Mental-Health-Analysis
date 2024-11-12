@@ -1,0 +1,64 @@
+library(readxl)
+data <- read_excel(file.choose())
+head(data)
+summary(data)
+
+##DO RFE FIRST##
+library(caret)
+
+# 1. Tentukan pemboleh ubah input (predictors) dan output (target)
+predictors <- data[, c("X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", "X9")]
+target <- data$GPA
+
+# 2. Menentukan kontrol untuk RFE
+control <- rfeControl(functions = lmFuncs, method = "cv", number = 10)  # 10-fold cross-validation
+
+# 3. Jalankan RFE untuk memilih pemboleh ubah terbaik
+rfe_results1 <- rfe(predictors, target, sizes = c(3:9), rfeControl = control)
+# Menggunakan 'sizes' yang lebih besar (contoh: 3 hingga 9) untuk memilih lebih banyak pemboleh ubah jika perlu
+
+# 4. Lihat hasil RFE untuk mengetahui pemboleh ubah yang dipilih
+rfe_results1
+summary(rfe_results1)
+
+# 5. Dapatkan pemboleh ubah terpilih
+selected_predictors <- predictors[, predictors(rfe_results1)]
+selected_predictors
+
+# 6. Menjalankan Multiple Linear Regression (MLR) dengan pemboleh ubah terpilih
+mlr_model <- lm(GPA ~ ., data = data.frame(selected_predictors, GPA = target))
+summary(mlr_model)
+
+#NORMALITY#
+#Plot histogram of residuals
+hist(residuals(mlr_model), main = "Histogram of Residuals", xlab = "Residuals", col = "skyblue", border = "black")
+#Q-Q plot
+qqnorm(residuals(mlr_model))
+qqline(residuals(mlr_model), col = "red")  #reference line
+
+#MULTICOLLINEARITY CHECK#
+library(car)
+#Calculate VIF
+vif(mlr_model)
+
+#LINEARITY ASSUMPTIONS#
+#Plot residuals vs fitted values
+plot(fitted(mlr_model), residuals(mlr_model), 
+     xlab = "Fitted Values", ylab = "Residuals", 
+     main = "Residuals vs Fitted", pch = 20)
+abline(h = 0, col = "red")  # Adds a horizontal line at y = 0
+
+# Perform the RESET test to check for linearity & homoscedasticity
+library(lmtest)
+reset_result <- resettest(mlr_model)
+reset_result
+# Perform the Harvey-Collier test (Linearity assumption checking)
+harvey_collier_test <- harvtest(mlr_model)
+harvey_collier_test
+
+#HOMOSCEDASTICITY(Constant Variance)
+#Same plot used to check both linearity and homoscedasticity#
+
+#Homoscedasticity assumption checking using Breusch-Pagan test
+library(lmtest)
+bptest(mlr_model)
