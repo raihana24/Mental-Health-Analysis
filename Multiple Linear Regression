@@ -8,6 +8,7 @@ summary(data)
 sum(is.na(data))  # Check for missing values
 
 ##DO RFE FIRST##
+# Recursive Feature Elimination - choosing the selected variables
 library(caret)
 
 # 1. Tentukan pemboleh ubah input (predictors) dan output (target)
