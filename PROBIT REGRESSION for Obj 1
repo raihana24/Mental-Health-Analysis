@@ -23,8 +23,6 @@ GPA_table_binary <- table(my_fyp$GPA_Binary)
 GPA_table_binary
 
 # Guna selected variables RFE done in OLR & MLR
-selected_predictors_olr
-
 # Selected predictors from RFE
 selected_predictors <- c("X2", "X4", "X5", "X6", "X7", "X9")
 
@@ -106,5 +104,7 @@ AIC(probit_model, reduced_model_probit)
 
 ### Comparison AIC all model
 
-# Compare AIC values
-AIC(olr_model, reduced_model, probit_model, reduced_model_probit)
+AIC(olr_model)
+AIC(reduced_model)
+AIC(probit_model)
+AIC(reduced_model_probit)
