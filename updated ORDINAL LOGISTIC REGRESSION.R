@@ -20,7 +20,7 @@ GPA_table <- table(my_fyp$GPA_Cat)
 GPA_table
 
 ##DO RFE FIRST##
-# Recursive Feature Elimination
+# Recursive Feature Elimination - CHOOSING THE SELECTED VARIABLES
 library(caret)
 
 # 1. Tentukan pemboleh ubah input (predictors) dan output (target)
