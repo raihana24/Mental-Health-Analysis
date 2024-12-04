@@ -74,16 +74,6 @@ results
 # Ensure GPA is a factor
 my_fyp$GPA_Cat <- factor(my_fyp$GPA_Cat, levels = c("Lulus", "Kepujian", "Cemerlang"))
 
-# Full model (all predictors)
-full_model <- polr(GPA_Cat ~ X6 + X2 + X9 + X7 + X4 + X5, data = my_fyp, Hess = TRUE)
-
-# Reduced model (with fewer predictors)
-reduced_model <- polr(GPA_Cat ~ X6 + X2, data = my_fyp, Hess = TRUE)
-
-# Compare the models using likelihood ratio test
-anova_result <- anova(reduced_model, full_model, test = "Chisq")
-anova_result
-
 # Fit the reduced and full models
 full_model <- polr(GPA_Cat ~ X6 + X2 + X9 + X7 + X4 + X5, data = my_fyp, Hess = TRUE)
 reduced_model <- polr(GPA_Cat ~ X6 + X2, data = my_fyp, Hess = TRUE)
