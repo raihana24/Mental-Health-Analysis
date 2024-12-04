@@ -1,7 +1,11 @@
+# Prepare data
 library(readxl)
 data <- read_excel(file.choose())
 head(data)
 summary(data)
+
+# Check for missing values
+sum(is.na(data))  # Check for missing values
 
 ##DO RFE FIRST##
 library(caret)
@@ -19,7 +23,6 @@ rfe_results1 <- rfe(predictors, target, sizes = c(3:9), rfeControl = control)
 
 # 4. Lihat hasil RFE untuk mengetahui pemboleh ubah yang dipilih
 rfe_results1
-summary(rfe_results1)
 
 # 5. Dapatkan pemboleh ubah terpilih
 selected_predictors <- predictors[, predictors(rfe_results1)]
@@ -52,6 +55,7 @@ abline(h = 0, col = "red")  # Adds a horizontal line at y = 0
 library(lmtest)
 reset_result <- resettest(mlr_model)
 reset_result
+
 # Perform the Harvey-Collier test (Linearity assumption checking)
 harvey_collier_test <- harvtest(mlr_model)
 harvey_collier_test
