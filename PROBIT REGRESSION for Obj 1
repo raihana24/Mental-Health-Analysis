@@ -1,0 +1,110 @@
+library(readxl)
+my_fyp <- read_excel(file.choose())
+head(my_fyp)
+summary(my_fyp)
+str(my_fyp)
+
+#GPA
+summary(my_fyp$GPA)
+my_fyp$GPA_Cat <- cut(my_fyp$GPA,
+                      breaks = c(1.00, 2.33, 3.33, 4.00),
+                      labels = c("Lulus", "Kepujian", "Cemerlang"),
+                      include.lowest = TRUE)
+
+#frequency table for GPA categories
+GPA_table <- table(my_fyp$GPA_Cat)
+GPA_table
+
+# Convert GPA categories to binary: 0 = Lulus, 1 = Kepujian or Cemerlang
+my_fyp$GPA_Binary <- ifelse(my_fyp$GPA_Cat == "Lulus", 0, 1)
+
+#frequency table for GPA categories
+GPA_table_binary <- table(my_fyp$GPA_Binary)
+GPA_table_binary
+
+# Guna selected variables RFE done in OLR & MLR
+selected_predictors_olr
+
+# Selected predictors from RFE
+selected_predictors <- c("X2", "X4", "X5", "X6", "X7", "X9")
+
+# Create the formula dynamically using selected predictors
+formula <- as.formula(paste("GPA_Binary ~", paste(selected_predictors, collapse = " + ")))
+
+# Perform probit regression using selected predictors
+probit_model <- glm(formula, data = my_fyp, family = binomial(link = "probit"))
+
+# View the summary of the probit regression model
+summary(probit_model)
+
+# Null model
+null_model <- glm(GPA_Binary ~ 1, data = my_fyp, family = binomial(link = "probit"))
+
+# Full model
+probit_model <- glm(GPA_Binary ~ X2 + X4 + X5 + X6 + X7 + X9, data = my_fyp, family = binomial(link = "probit"))
+
+# Extract log-likelihoods
+log_lik_null <- logLik(null_model)
+log_lik_full <- logLik(probit_model)
+
+# Calculate G-statistic
+G_stat <- -2 * (as.numeric(log_lik_null) - as.numeric(log_lik_full))
+
+# Degrees of freedom
+df <- df.residual(null_model) - df.residual(probit_model)
+
+# P-value
+p_value <- pchisq(G_stat, df, lower.tail = FALSE)
+
+# Create a summary table
+result_table <- data.frame(
+  `Log Likelihood` = round(as.numeric(log_lik_full), 3),
+  G = round(G_stat, 3),
+  df = df,
+  `p-value` = format.pval(p_value, digits = 3, eps = 0.001)
+)
+
+# Display the table
+print(result_table)
+
+
+# Load the required package
+library(lmtest)
+
+# Perform the Wald test
+waldtest(probit_model)
+
+# Extract coefficients, z-values, and p-values from the probit model
+coefficients <- summary(probit_model)$coefficients
+
+# Create a data frame for the table
+wald_test_results <- data.frame(
+  Variables = rownames(coefficients),
+  Z = round(coefficients[, "z value"], 2),       # Extract and round z-values
+  p_value = round(coefficients[, "Pr(>|z|)"], 3) # Extract and round p-values
+)
+
+# Rename the first variable for clarity (constant term)
+wald_test_results$Variables[1] <- "Constant"
+
+# Display the table
+print(wald_test_results)
+
+confint(probit_model)
+
+# Fit the reduced probit model
+reduced_model_probit <- glm(GPA_Binary ~ X6, data = my_fyp, family = binomial(link = "probit"))
+
+# Summary of the reduced model
+summary(reduced_model_probit)
+
+# Perform Likelihood Ratio Test
+anova(probit_model, reduced_model_probit, test = "Chisq")
+
+# Compare AIC values
+AIC(probit_model, reduced_model_probit)
+
+### Comparison AIC all model
+
+# Compare AIC values
+AIC(olr_model, reduced_model, probit_model, reduced_model_probit)
