@@ -96,9 +96,9 @@ inferences_table <- data.frame(
   no.par = c(length(coef(reduced_model)), length(coef(full_model))),
   AIC = c(reduced_aic, full_aic),
   logLik = c(reduced_logLik, full_logLik),
-  LR.stat = c(NA, lr_stat),  # LR statistic only for full model comparison
-  df = c(NA, df),
-  Pr.Chisq = c(NA, p_value)
+  LR.stat = c("", lr_stat),  # LR statistic only for full model comparison
+  df = c("", df),
+  Pr.Chisq = c("", p_value)
 )
 
 # Display the table
