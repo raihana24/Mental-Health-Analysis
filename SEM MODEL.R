@@ -59,6 +59,22 @@ parameters
 library(semPlot)
 semPaths(fit, what = "est", whatLabels = "est", layout = "tree", edge.label.cex = 0.8, sizeMan = 10, sizeLat = 12)
 
+# Plot the SEM model with customizations
+semPaths(fit, 
+         layout = "tree", 
+         sizeLat = 8, 
+         sizeMan = 8, 
+         edge.label.cex = 1.2, 
+         node.width = 1.5, 
+         node.height = 1.5, 
+         fontSize = 12, 
+         mar = c(5, 5, 5, 5), 
+         asize = 4, 
+         residuals = TRUE, 
+         variances = TRUE, 
+         fade = FALSE, 
+         edge.color = "darkgray", 
+         nodeColor = c("lightblue", "lightgreen"))
 
 ---
 data
