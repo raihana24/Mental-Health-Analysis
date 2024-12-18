@@ -39,6 +39,11 @@ fit <- sem(SEMmodel, data = data)
 
 # Check the model fitted
 summary(fit, fit.measures = TRUE)
+#atau
+summary(fit, standardized = TRUE)
+
+# Uji fit model
+fitMeasures(fit, fit.measures = c("cfi", "tli", "rmsea", "srmr"))
 
 fit <- sem(model, data = data, std.lv = TRUE)  # std.lv = TRUE fixes latent variable variance to 1
 summary(fit, standardized = TRUE, fit.measures = TRUE)  # Check model fit indices
