@@ -69,6 +69,18 @@ results <- data.frame(
 # Display the results
 results
 
+# Check Proportional Odds Assumption
+library(MASS)
+library(brant)
+brant(olr_model)
+
+# Calculate VIF (check multicollinearity)
+nilai_vif_olr <- vif(olr_model)
+nilai_vif_olr
+# Tolerance
+tolerance_values_olr <- 1 / nilai_vif_olr
+tolerance_values_olr
+
 ### Performing inferences by comparing full and reduced models 
 
 # Ensure GPA is a factor
