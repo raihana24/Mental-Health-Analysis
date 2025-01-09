@@ -65,7 +65,6 @@ result_table <- data.frame(
 # Display the table
 print(result_table)
 
-
 # Load the required package
 library(lmtest)
 
@@ -82,13 +81,12 @@ wald_test_results <- data.frame(
   p_value = round(coefficients[, "Pr(>|z|)"], 3) # Extract and round p-values
 )
 
-# Rename the first variable for clarity (constant term)
-wald_test_results$Variables[1] <- "Constant"
-
 # Display the table
 print(wald_test_results)
 
 confint(probit_model)
+
+### Full model vs Reduced model ### (if needed)
 
 # Fit the reduced probit model
 reduced_model_probit <- glm(GPA_Binary ~ X6, data = my_fyp, family = binomial(link = "probit"))
@@ -102,9 +100,8 @@ anova(probit_model, reduced_model_probit, test = "Chisq")
 # Compare AIC values
 AIC(probit_model, reduced_model_probit)
 
-### Comparison AIC all model
+### Comparison AIC all model ###
 
+AIC(mlr_model)
 AIC(olr_model)
-AIC(reduced_model)
 AIC(probit_model)
-AIC(reduced_model_probit)
