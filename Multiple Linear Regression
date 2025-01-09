@@ -33,6 +33,10 @@ selected_predictors
 mlr_model <- lm(GPA ~ ., data = data.frame(selected_predictors, GPA = target))
 summary(mlr_model)
 
+# Residual diagnostics: Plot residuals
+par(mfrow = c(2, 2))  # Arrange plots in a 2x2 layout
+plot(mlr_model)
+
 #NORMALITY#
 #Plot histogram of residuals
 hist(residuals(mlr_model), main = "Histogram of Residuals", xlab = "Residuals", col = "skyblue", border = "black")
